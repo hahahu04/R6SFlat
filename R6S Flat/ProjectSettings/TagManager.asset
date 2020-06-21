@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - Walls
-  - 
+  - BG
   - 
   - 
   - 
@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG
+    uniqueID: 3991283951
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

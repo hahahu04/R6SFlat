@@ -20,6 +20,17 @@ public class BasicMovement : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    void LookAtMouse()
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector3 dir = mousePos - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(angle, Vector3.forward), rotSpeed);
+    }
+
+
     void FixedUpdate()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -37,5 +48,6 @@ public class BasicMovement : MonoBehaviour
         movePos.y += y * speed;
 
         rb.MovePosition(movePos);
+        LookAtMouse();
     }
 }

@@ -61,7 +61,7 @@ public class Gun : MonoBehaviour
                     fireRate_timer = fireRate;
                 }
             }
-            fireRate -= 1;
+            fireRate_timer -= 1;
         }
         
     }

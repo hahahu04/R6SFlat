@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    public LineRenderer lr;
+    public GameObject bulletLR;
     public Color bulletColor;
     public Transform barrelEnd;
     public float damage;
@@ -43,20 +43,25 @@ public class Gun : MonoBehaviour
         {
             if (Input.GetMouseButton(0) && magSize_counter > 0 && fireRate_timer <= 0)
             {
-                Vector3 fireDir = Vector2.right;
+                Vector3 fireDir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 fireDir.z += Random.Range(-accuracyOffset, accuracyOffset);
                 RaycastHit2D shot = Physics2D.Raycast(barrelEnd.position, fireDir, distance, hitLayers);
-
+                Debug.Log("Shots fired");
                 if (shot.collider != null)
                 {
                     if (damageLayers == (damageLayers | (1 << shot.collider.gameObject.layer)))
                     {
                         Debug.Log("hit");
                     }
+                    Debug.Log("hit");
+                    LineRenderer lr = Instantiate(bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
+                    lr.SetPosition(0, transform.position);
+                    lr.SetPosition(1, shot.point);
 
-                    lr.
+                    fireRate_timer = fireRate;
                 }
             }
+            fireRate -= 1;
         }
         
     }

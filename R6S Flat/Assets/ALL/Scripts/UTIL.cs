@@ -27,4 +27,9 @@ public class UTIL : MonoBehaviour
         }
         return (-1);
     }
+
+    public static Vector3 MousePos()
+    {
+        return (Camera.main.ScreenToWorldPoint(Input.mousePosition));
+    }
 }

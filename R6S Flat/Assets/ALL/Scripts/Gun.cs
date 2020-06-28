@@ -17,52 +17,74 @@ public class Gun : MonoBehaviour
     [HideInInspector]
     public float fireRate_timer;
     public int magSize;
-    [HideInInspector]
+    //[HideInInspector]
     public int magSize_counter;
+    [Tooltip("(SECONDS)")]
+    public float reloadSpeed;
+    [HideInInspector]
+    public float reloadSpeed_timer;
 
     [Tooltip("SMG, Rifle, Pistol, MG, Shotgun, Electric, None")]
     public string ammoType;
 
     public bool fullAuto;
 
+    [HideInInspector]
+    public bool reloading;
+
     // Start is called before the first frame update
     void Start()
     {
         magSize_counter = magSize;
+        reloadSpeed_timer = reloadSpeed;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (magSize_counter <= 0 || Input.GetKeyDown("r"))
+            reloading = true;
+
+        if (reloading)
+        {
+            reloadSpeed_timer -= Time.deltaTime;
+            if (reloadSpeed_timer <= 0)
+            {
+                magSize_counter = magSize;
+                reloadSpeed_timer = reloadSpeed;
+                reloading = false;
+            }
+        }
     }
 
     private void FixedUpdate()
     {
         if (fullAuto)
         {
-            if (Input.GetMouseButton(0) && magSize_counter > 0 && fireRate_timer <= 0)
+            if (Input.GetMouseButton(0) && fireRate_timer <= 0 && !reloading)
             {
-                Vector3 fireDir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-                fireDir.z += Random.Range(-accuracyOffset, accuracyOffset);
+                float temp_ao = accuracyOffset * UTIL.FastDist(transform.position, UTIL.MousePos(), 0.1f);
+
+                Vector3 targetPos = UTIL.MousePos() + new Vector3(Random.Range(-temp_ao, temp_ao), Random.Range(-temp_ao, temp_ao));
+                Vector3 fireDir = targetPos - transform.position;
                 RaycastHit2D shot = Physics2D.Raycast(barrelEnd.position, fireDir, distance, hitLayers);
-                Debug.Log("Shots fired");
                 if (shot.collider != null)
                 {
                     if (damageLayers == (damageLayers | (1 << shot.collider.gameObject.layer)))
                     {
-                        Debug.Log("hit");
+                        //Debug.Log("hit");
                     }
-                    Debug.Log("hit");
+                    //Debug.Log("hit");
                     LineRenderer lr = Instantiate(bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
                     lr.SetPosition(0, transform.position);
                     lr.SetPosition(1, shot.point);
 
                     fireRate_timer = fireRate;
+                    magSize_counter -= 1;
                 }
             }
-            fireRate_timer -= 1;
+            
         }
-        
+
+        fireRate_timer -= 1;
     }
 }

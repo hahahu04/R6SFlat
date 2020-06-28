@@ -17,7 +17,7 @@ public class BulletLR : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Color none = new Color(0, 0, 0, 0);
+        Color none = new Color(lr.startColor.r, lr.startColor.g, lr.startColor.b, 0);
         lr.startColor = Color.Lerp(lr.startColor, none, fadeDelta);
         lr.endColor = Color.Lerp(lr.endColor, none, fadeDelta);
         decayTime -= 1;

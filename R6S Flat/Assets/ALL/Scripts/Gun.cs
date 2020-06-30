@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+[System.Serializable]
+public class GunStats
 {
+    [Header("Gun ID---------")]
+    public string ID;
+    [Tooltip("SMG, Rifle, Pistol, MG, Shotgun, Electric, None")]
+    public string ammoType;
+    [Header("Stats----------")]
+
     public GameObject bulletLR;
     public Color bulletColor;
+    [HideInInspector]
     public Transform barrelEnd;
     public float damage;
     public float accuracyOffset;
@@ -17,17 +25,18 @@ public class Gun : MonoBehaviour
     [HideInInspector]
     public float fireRate_timer;
     public int magSize;
-    //[HideInInspector]
     public int magSize_counter;
     [Tooltip("(SECONDS)")]
     public float reloadSpeed;
-    [HideInInspector]
+    //[HideInInspector]
     public float reloadSpeed_timer;
+    public bool fullAuto = true;
+}
 
-    [Tooltip("SMG, Rifle, Pistol, MG, Shotgun, Electric, None")]
-    public string ammoType;
 
-    public bool fullAuto;
+public class Gun : MonoBehaviour
+{
+    public GunStats STATS;
 
     [HideInInspector]
     public bool reloading;
@@ -35,22 +44,24 @@ public class Gun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        magSize_counter = magSize;
-        reloadSpeed_timer = reloadSpeed;
+        STATS.magSize_counter = STATS.magSize;
+        STATS.reloadSpeed_timer = STATS.reloadSpeed;
+        STATS.barrelEnd = transform.parent.GetComponent<PlayerStats>().barrelEnd;
     }
 
     private void Update()
     {
-        if (magSize_counter <= 0 || Input.GetKeyDown("r"))
+        if (STATS.magSize_counter <= 0 || Input.GetKeyDown("r"))
             reloading = true;
 
         if (reloading)
         {
-            reloadSpeed_timer -= Time.deltaTime;
-            if (reloadSpeed_timer <= 0)
+            //Debug.Log("Reloading");
+            STATS.reloadSpeed_timer -= Time.deltaTime;
+            if (STATS.reloadSpeed_timer <= 0)
             {
-                magSize_counter = magSize;
-                reloadSpeed_timer = reloadSpeed;
+                STATS.magSize_counter = STATS.magSize;
+                STATS.reloadSpeed_timer = STATS.reloadSpeed;
                 reloading = false;
             }
         }
@@ -58,33 +69,33 @@ public class Gun : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (fullAuto)
+        if (STATS.fullAuto)
         {
-            if (Input.GetMouseButton(0) && fireRate_timer <= 0 && !reloading)
+            if (Input.GetMouseButton(0) && STATS.fireRate_timer <= 0 && !reloading)
             {
-                float temp_ao = accuracyOffset * UTIL.FastDist(transform.position, UTIL.MousePos(), 0.1f);
+                float temp_ao = STATS.accuracyOffset * UTIL.FastDist(transform.position, UTIL.MousePos(), 0.1f);
 
                 Vector3 targetPos = UTIL.MousePos() + new Vector3(Random.Range(-temp_ao, temp_ao), Random.Range(-temp_ao, temp_ao));
                 Vector3 fireDir = targetPos - transform.position;
-                RaycastHit2D shot = Physics2D.Raycast(barrelEnd.position, fireDir, distance, hitLayers);
+                RaycastHit2D shot = Physics2D.Raycast(STATS.barrelEnd.position, fireDir, STATS.distance, STATS.hitLayers);
                 if (shot.collider != null)
                 {
-                    if (damageLayers == (damageLayers | (1 << shot.collider.gameObject.layer)))
+                    if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
                     {
                         //Debug.Log("hit");
                     }
                     //Debug.Log("hit");
-                    LineRenderer lr = Instantiate(bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
+                    LineRenderer lr = Instantiate(STATS.bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
                     lr.SetPosition(0, transform.position);
                     lr.SetPosition(1, shot.point);
 
-                    fireRate_timer = fireRate;
-                    magSize_counter -= 1;
+                    STATS.fireRate_timer = STATS.fireRate;
+                    STATS.magSize_counter -= 1;
                 }
             }
             
         }
 
-        fireRate_timer -= 1;
+        STATS.fireRate_timer -= 1;
     }
 }

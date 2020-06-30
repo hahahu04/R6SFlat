@@ -15,16 +15,16 @@ TagManager:
   - 
   - Walls
   - BG
-  - FOV Blocker
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - FOV Blocker/0
+  - FOV Blocker/1
+  - FOV Blocker/2
+  - FOV Blocker/3
+  - FOV Blocker/4
+  - FOV Blocker/5
+  - FOV Blocker/6
+  - FOV Blocker/7
+  - Props
+  - Mask
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 1822787843
     locked: 0

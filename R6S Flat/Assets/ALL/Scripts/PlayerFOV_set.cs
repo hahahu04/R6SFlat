@@ -8,7 +8,7 @@ public class PlayerFOV_set : MonoBehaviour
     public float viewAngle;
     public float viewDistance;
     public float meshVerticesCount;
-
+    public float angleOffset;
     private PlayerFOV fov;
 
     // Start is called before the first frame update
@@ -24,5 +24,6 @@ public class PlayerFOV_set : MonoBehaviour
     {
         fov.viewDistance = viewDistance;
         fov.fov = viewAngle;
+        fov.angleOffset = angleOffset;
     }
 }

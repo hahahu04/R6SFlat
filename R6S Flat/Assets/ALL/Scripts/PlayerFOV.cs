@@ -12,6 +12,7 @@ public class PlayerFOV : MonoBehaviour
     float startingAngle;
     public float viewDistance = 15f;
     public int rayCount = 100;
+    public float angleOffset;
     void Start()
     {
         mesh = new Mesh();
@@ -82,6 +83,6 @@ public class PlayerFOV : MonoBehaviour
 
     public void SetAimDirection(Vector3 dir)
     {
-        startingAngle = UTIL.GetAngleFromVectorFloat(dir) + fov / 2f;
+        startingAngle = UTIL.GetAngleFromVectorFloat(dir) + fov / 2f - 180f;
     }
 }

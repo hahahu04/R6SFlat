@@ -37,7 +37,6 @@ public class GunStats
 public class Gun : MonoBehaviour
 {
     public GunStats STATS;
-
     [HideInInspector]
     public bool reloading;
 
@@ -82,7 +81,11 @@ public class Gun : MonoBehaviour
                 {
                     if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
                     {
-                        //Debug.Log("hit");
+                        Debug.Log("hit");
+                        if(shot.collider.gameObject.GetComponent<PlayerStats>() != null)
+                        {
+                            shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);
+                        }
                     }
                     //Debug.Log("hit");
                     LineRenderer lr = Instantiate(STATS.bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();

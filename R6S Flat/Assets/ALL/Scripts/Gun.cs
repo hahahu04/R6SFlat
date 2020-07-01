@@ -81,7 +81,7 @@ public class Gun : MonoBehaviour
                 {
                     if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
                     {
-                        Debug.Log("hit");
+                        //Debug.Log("hit");
                         if(shot.collider.gameObject.GetComponent<PlayerStats>() != null)
                         {
                             shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);

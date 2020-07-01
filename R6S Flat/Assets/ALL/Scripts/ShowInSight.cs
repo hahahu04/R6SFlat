@@ -8,6 +8,7 @@ public class ShowInSight : MonoBehaviour
     public Transform target;
     public LayerMask wallLayers;
     public float maxDist;
+    public float showDist;
     public bool useAnim;
     private Animator anim;
 
@@ -40,7 +41,7 @@ public class ShowInSight : MonoBehaviour
                 pos의 위치에서 Transform 타입 변수 target(플레이어)의 방향으로 target(플레이어) 까지의 거리만큼
                 레이저를 wallLayers(벽 레이어)에서 발사
                  */
-                if (cast.collider == null && UTIL.FastDist(target.position, pos.position, 0.05f) <= maxDist)
+                if ((cast.collider == null && UTIL.FastDist(target.position, pos.position, 0.05f) <= maxDist) || UTIL.FastDist(target.position, pos.position, 0.05f) <= showDist)
                     inSight = true;
                 /*
                 만약 레이저에 아무것도 닿지 안았고 발사 지점과 너무 멀지 않았다면:
@@ -51,7 +52,7 @@ public class ShowInSight : MonoBehaviour
         else
         {
             RaycastHit2D cast = Physics2D.Raycast(transform.position, target.position - transform.position, UTIL.FastDist(target.position, transform.position, 0.05f), wallLayers);
-            if (cast.collider == null && UTIL.FastDist(target.position, transform.position, 0.05f) <= maxDist)
+            if ((cast.collider == null && UTIL.FastDist(target.position, transform.position, 0.05f) <= maxDist) || UTIL.FastDist(target.position, transform.position, 0.05f) <= showDist)
                 inSight = true;
         }
         

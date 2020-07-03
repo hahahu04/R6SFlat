@@ -23,7 +23,7 @@ public class GunStats
     public float distance = 99;
     public LayerMask hitLayers;
     public LayerMask damageLayers;
-    [HideInInspector]
+    //[HideInInspector]
     public float fireRate_timer;
     public int magSize;
     public int magSize_counter;
@@ -32,6 +32,8 @@ public class GunStats
     //[HideInInspector]
     public float reloadSpeed_timer;
     public bool fullAuto = true;
+    [Header("fullAuto == false")]
+    public float cameraShakeDuration;
 }
 
 
@@ -71,11 +73,8 @@ public class Gun : MonoBehaviour
             UTIL.GetPlayer().GetComponent<Animator>().SetBool("Aim", true);
         else
             UTIL.GetPlayer().GetComponent<Animator>().SetBool("Aim", false);
-            
-    }
 
-    private void FixedUpdate()
-    {
+
         if (STATS.fullAuto)
         {
             if (Input.GetMouseButton(0) && STATS.fireRate_timer <= 0 && !reloading)
@@ -86,7 +85,16 @@ public class Gun : MonoBehaviour
             else
                 ShakeCamera(false);
         }
-        STATS.fireRate_timer -= 1;
+        else
+        {
+            if (Input.GetMouseButtonDown(0) && STATS.fireRate_timer <= 0 && !reloading)
+            {
+                Shoot();
+                ShakeCamera(STATS.cameraShakeDuration);
+            }
+        }
+        STATS.fireRate_timer -= Time.deltaTime;
+
     }
 
     void Shoot()
@@ -120,9 +128,21 @@ public class Gun : MonoBehaviour
 
     void ShakeCamera(bool shake)
     {
-        if(shake)
-            UTIL.GetPlayer().GetComponent<CameraShake>().shake = true;
+        Debug.Log(1);
+
+        if (shake)
+        {
+            UTIL.GetPlayer().GetComponent<CameraShake>().Shake(true);
+            UTIL.GetPlayer().GetComponent<CameraShake>().Shake(-1);
+        }
         else
-            UTIL.GetPlayer().GetComponent<CameraShake>().shake = false;
+        {
+            UTIL.GetPlayer().GetComponent<CameraShake>().Shake(false);
+            UTIL.GetPlayer().GetComponent<CameraShake>().Shake(0f);
+        }
+    }
+    void ShakeCamera(float duration)
+    {
+        UTIL.GetPlayer().GetComponent<CameraShake>().Shake(duration);
     }
 }

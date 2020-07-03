@@ -11,6 +11,9 @@ public class CameraShake : MonoBehaviour
     [HideInInspector]
     public bool shake;
 
+    [HideInInspector]
+    public float shakeDuration;
+    public float shakeDuration_default;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,5 +31,41 @@ public class CameraShake : MonoBehaviour
         }
         else
             camPos.localPosition = initPos;
+    }
+
+    void Update()
+    {
+        if (shakeDuration > 0)
+        {
+            shake = true;
+            shakeDuration -= Time.deltaTime;
+        }
+        else
+        {
+            shake = false;
+            shakeDuration = 0;
+        }
+    }
+
+    public void Shake(bool shake)
+    {
+        Debug.Log(2);
+
+        if (shake)
+            shake = true;
+        else
+            shake = false;
+    }
+    public void Shake(float duration)
+    {
+        shake = true;
+        if(duration != -1)
+        {
+            shakeDuration = duration;
+        }
+        else
+        {
+            shakeDuration = shakeDuration_default;
+        }
     }
 }

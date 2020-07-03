@@ -99,3 +99,4 @@ MonoBehaviour:
   fov: 130
   viewDistance: 12
   rayCount: 700
+  angleOffset: 0

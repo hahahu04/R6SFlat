@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class UTIL : MonoBehaviour
@@ -15,6 +16,11 @@ public class UTIL : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public static GameObject GetPlayer()
+    {
+        return (GameObject.FindGameObjectWithTag("Player"));
     }
 
     public static float FastDist(Vector2 pos1, Vector2 pos2, float step)

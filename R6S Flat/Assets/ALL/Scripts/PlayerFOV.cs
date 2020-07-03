@@ -73,7 +73,7 @@ public class PlayerFOV : MonoBehaviour
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
-        GetComponent<MeshFilter>().mesh = mesh;
+        mesh.bounds = new Bounds(origin, Vector3.one * 1000f);
     }
 
     public void SetOrigin(Vector3 origin)

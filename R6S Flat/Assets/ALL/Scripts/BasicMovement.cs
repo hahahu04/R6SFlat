@@ -11,6 +11,9 @@ public class BasicMovement : MonoBehaviour
     public float speed_crouch;
     public float speed_sprint;
     public float speed_dying;
+    [Tooltip("Used for diagonal movement")]
+    public float diag_movementDelta = 0.75f; //루트(0.5) = 0.707~~
+    public bool smoothMovement;
 
     public float rotSpeed;
 
@@ -33,8 +36,8 @@ public class BasicMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        float x = !smoothMovement ? Input.GetAxisRaw("Horizontal") : Input.GetAxis("Horizontal");
+        float y = !smoothMovement ? Input.GetAxisRaw("Vertical") : Input.GetAxis("Vertical");
 
         if (Input.GetKey(KeyCode.LeftControl))
             speed = speed_crouch;
@@ -42,6 +45,9 @@ public class BasicMovement : MonoBehaviour
             speed = speed_sprint;
         else
             speed = speed_walk;
+
+        if (x * y != 0)
+            speed *= diag_movementDelta;
 
         Vector2 movePos = transform.position;
         movePos.x += x * speed;

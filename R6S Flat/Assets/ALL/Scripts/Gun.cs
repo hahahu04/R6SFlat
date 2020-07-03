@@ -12,6 +12,7 @@ public class GunStats
     [Header("Stats----------")]
 
     public GameObject bulletLR;
+    public GameObject muzzleFlash;
     public Color bulletColor;
     [HideInInspector]
     public Transform barrelEnd;
@@ -39,7 +40,6 @@ public class Gun : MonoBehaviour
     public GunStats STATS;
     [HideInInspector]
     public bool reloading;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +64,14 @@ public class Gun : MonoBehaviour
                 reloading = false;
             }
         }
+
+        
+
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+            UTIL.GetPlayer().GetComponent<Animator>().SetBool("Aim", true);
+        else
+            UTIL.GetPlayer().GetComponent<Animator>().SetBool("Aim", false);
+            
     }
 
     private void FixedUpdate()
@@ -72,33 +80,49 @@ public class Gun : MonoBehaviour
         {
             if (Input.GetMouseButton(0) && STATS.fireRate_timer <= 0 && !reloading)
             {
-                float temp_ao = STATS.accuracyOffset * UTIL.FastDist(transform.position, UTIL.MousePos(), 0.1f);
+                Shoot();
+                ShakeCamera(true);
+            }
+            else
+                ShakeCamera(false);
+        }
+        STATS.fireRate_timer -= 1;
+    }
 
-                Vector3 targetPos = UTIL.MousePos() + new Vector3(Random.Range(-temp_ao, temp_ao), Random.Range(-temp_ao, temp_ao));
-                Vector3 fireDir = targetPos - transform.position;
-                RaycastHit2D shot = Physics2D.Raycast(STATS.barrelEnd.position, fireDir, STATS.distance, STATS.hitLayers);
-                if (shot.collider != null)
+    void Shoot()
+    {
+        float temp_ao = STATS.accuracyOffset * UTIL.FastDist(transform.position, UTIL.MousePos(), 0.1f);
+
+        Vector3 targetPos = UTIL.MousePos() + new Vector3(Random.Range(-temp_ao, temp_ao), Random.Range(-temp_ao, temp_ao));
+        Vector3 fireDir = targetPos - transform.position;
+        RaycastHit2D shot = Physics2D.Raycast(STATS.barrelEnd.position, fireDir, STATS.distance, STATS.hitLayers);
+        if (shot.collider != null)
+        {
+            if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
+            {
+                //Debug.Log("hit");
+                if (shot.collider.gameObject.GetComponent<PlayerStats>() != null)
                 {
-                    if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
-                    {
-                        //Debug.Log("hit");
-                        if(shot.collider.gameObject.GetComponent<PlayerStats>() != null)
-                        {
-                            shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);
-                        }
-                    }
-                    //Debug.Log("hit");
-                    LineRenderer lr = Instantiate(STATS.bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
-                    lr.SetPosition(0, transform.position);
-                    lr.SetPosition(1, shot.point);
-
-                    STATS.fireRate_timer = STATS.fireRate;
-                    STATS.magSize_counter -= 1;
+                    shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);
                 }
             }
-            
-        }
+            //Debug.Log("hit");
+            LineRenderer lr = Instantiate(STATS.bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
+            lr.SetPosition(0, transform.position);
+            lr.SetPosition(1, shot.point);
 
-        STATS.fireRate_timer -= 1;
+            Instantiate(STATS.muzzleFlash, STATS.barrelEnd.position, UTIL.GetPlayer().transform.rotation);
+
+            STATS.fireRate_timer = STATS.fireRate;
+            STATS.magSize_counter -= 1;
+        }
+    }
+
+    void ShakeCamera(bool shake)
+    {
+        if(shake)
+            UTIL.GetPlayer().GetComponent<CameraShake>().shake = true;
+        else
+            UTIL.GetPlayer().GetComponent<CameraShake>().shake = false;
     }
 }

@@ -15,14 +15,14 @@ public class GunStats
     public GameObject muzzleFlash;
     public Color bulletColor;
     [HideInInspector]
-    public Transform barrelEnd;
+    public Transform barrelEnd, bulletSpawnPoint;
     public float damage;
     public float accuracyOffset;
     public float fireRate;
     [Tooltip("Must be long enought to hit at least something")]
     public float distance = 99;
     public LayerMask hitLayers;
-    public LayerMask damageLayers;
+    //public LayerMask damageLayers;
     //[HideInInspector]
     public float fireRate_timer;
     public int magSize;
@@ -48,6 +48,7 @@ public class Gun : MonoBehaviour
         STATS.magSize_counter = STATS.magSize;
         STATS.reloadSpeed_timer = STATS.reloadSpeed;
         STATS.barrelEnd = transform.parent.GetComponent<PlayerStats>().barrelEnd;
+        STATS.bulletSpawnPoint = transform.parent.GetComponent<PlayerStats>().bulletSpawnPoint;
     }
 
     private void Update()
@@ -79,10 +80,8 @@ public class Gun : MonoBehaviour
             if (Input.GetMouseButton(0) && STATS.fireRate_timer <= 0 && !reloading)
             {
                 Shoot();
-                ShakeCamera(true);
+                ShakeCamera(STATS.cameraShakeDuration);
             }
-            else
-                ShakeCamera(false);
         }
         else
         {
@@ -102,20 +101,21 @@ public class Gun : MonoBehaviour
 
         Vector3 targetPos = UTIL.MousePos() + new Vector3(Random.Range(-temp_ao, temp_ao), Random.Range(-temp_ao, temp_ao));
         Vector3 fireDir = targetPos - transform.position;
-        RaycastHit2D shot = Physics2D.Raycast(STATS.barrelEnd.position, fireDir, STATS.distance, STATS.hitLayers);
+        RaycastHit2D shot = Physics2D.Raycast(STATS.bulletSpawnPoint.position, fireDir, STATS.distance, STATS.hitLayers);
         if (shot.collider != null)
         {
-            if (STATS.damageLayers == (STATS.damageLayers | (1 << shot.collider.gameObject.layer)))
+            //Debug.Log("hit");
+            if (shot.collider.gameObject.GetComponent<PlayerStats>() != null)
             {
-                //Debug.Log("hit");
-                if (shot.collider.gameObject.GetComponent<PlayerStats>() != null)
-                {
-                    shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);
-                }
+                shot.collider.gameObject.GetComponent<PlayerStats>().TakeDamage(STATS.damage);
+            }
+            if (shot.collider.gameObject.CompareTag("Breakable"))
+            {
+                shot.collider.gameObject.GetComponent<ObjectStats>().TakeDamage(STATS.damage);
             }
             //Debug.Log("hit");
-            LineRenderer lr = Instantiate(STATS.bulletLR, transform.position, Quaternion.identity).GetComponent<LineRenderer>();
-            lr.SetPosition(0, transform.position);
+            LineRenderer lr = Instantiate(STATS.bulletLR, STATS.bulletSpawnPoint.position, Quaternion.identity).GetComponent<LineRenderer>();
+            lr.SetPosition(0, STATS.bulletSpawnPoint.transform.position);
             lr.SetPosition(1, shot.point);
 
             Instantiate(STATS.muzzleFlash, STATS.barrelEnd.position, UTIL.GetPlayer().transform.rotation);
@@ -138,6 +138,7 @@ public class Gun : MonoBehaviour
             UTIL.GetPlayer().GetComponent<CameraShake>().Shake(0f);
         }
     }
+
     void ShakeCamera(float duration)
     {
         UTIL.GetPlayer().GetComponent<CameraShake>().Shake(duration);

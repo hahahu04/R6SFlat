@@ -188,22 +188,21 @@ MonoBehaviour:
       type: 3}
     bulletColor: {r: 0, g: 0, b: 0, a: 0}
     barrelEnd: {fileID: 0}
+    bulletSpawnPoint: {fileID: 0}
     damage: 10
     accuracyOffset: 0.02
-    fireRate: 3
+    fireRate: 0.08
     distance: 99
     hitLayers:
       serializedVersion: 2
-      m_Bits: 1048832
-    damageLayers:
-      serializedVersion: 2
-      m_Bits: 1048576
+      m_Bits: 3145984
     fireRate_timer: 0
     magSize: 30
     magSize_counter: 30
     reloadSpeed: 2
     reloadSpeed_timer: 0
     fullAuto: 1
+    cameraShakeDuration: 0.3
   reloading: 0
 --- !u!1 &780263092
 GameObject:
@@ -371,6 +370,36 @@ Transform:
   m_Father: {fileID: 1922453875656661724}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1023746623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023746624}
+  m_Layer: 20
+  m_Name: BarrelEnd
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023746624
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023746623}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.766, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1922453875656661724}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1571189274
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +634,7 @@ Transform:
   - {fileID: 749750498}
   - {fileID: 1571189275}
   - {fileID: 1013524634}
+  - {fileID: 1023746624}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -711,6 +741,8 @@ MonoBehaviour:
   magnitude: 0.1
   camPos: {fileID: 1013524634}
   shake: 0
+  shakeDuration: 0
+  shakeDuration_default: 0.5
 --- !u!114 &1922453875656661699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -744,7 +776,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userName: Fuckin Imbecile
-  barrelEnd: {fileID: 1922453875724236892}
+  barrelEnd: {fileID: 1023746624}
+  bulletSpawnPoint: {fileID: 1922453875724236892}
   ID: 0
   health: 100
   maxHealth: 100
@@ -798,7 +831,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1922453875724236892}
   m_Layer: 20
-  m_Name: BarrelEnd
+  m_Name: BulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,7 +845,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1922453875724236895}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.726, y: 0, z: 0}
+  m_LocalPosition: {x: 0.393, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1922453875656661724}

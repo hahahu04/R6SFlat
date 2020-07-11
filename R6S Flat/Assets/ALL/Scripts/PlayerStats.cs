@@ -7,6 +7,7 @@ public class PlayerStats : MonoBehaviour
     [Header("REFs-------")]
     public string userName;
     public Transform barrelEnd;
+    public Transform bulletSpawnPoint;
     public int ID;
     [Header("VARs-------")]
     public float health;

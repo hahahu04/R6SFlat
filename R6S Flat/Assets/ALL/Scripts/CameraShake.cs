@@ -8,10 +8,10 @@ public class CameraShake : MonoBehaviour
     public Transform camPos;
     Vector2 initPos;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool shake;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float shakeDuration;
     public float shakeDuration_default;
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class CameraShake : MonoBehaviour
 
             float m = magnitude * UTIL.Qsqrt(shakeDuration, 0.15f);
 
-            movePos += new Vector2(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude));
+            movePos += new Vector2(Random.Range(-m, m), Random.Range(-m, m));
             camPos.localPosition = movePos;
         }
         else

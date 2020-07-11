@@ -26,6 +26,9 @@ public class CameraShake : MonoBehaviour
         if (shake)
         {
             Vector2 movePos = initPos;
+
+            float m = magnitude * UTIL.Qsqrt(shakeDuration, 0.15f);
+
             movePos += new Vector2(Random.Range(-magnitude, magnitude), Random.Range(-magnitude, magnitude));
             camPos.localPosition = movePos;
         }
@@ -47,25 +50,26 @@ public class CameraShake : MonoBehaviour
         }
     }
 
-    public void Shake(bool shake)
+    public void Shake(bool on)
     {
-        Debug.Log(2);
-
-        if (shake)
+        if (on)
+        {
             shake = true;
+        }
         else
             shake = false;
     }
     public void Shake(float duration)
     {
         shake = true;
-        if(duration != -1)
-        {
+        if (duration > 0)
             shakeDuration = duration;
-        }
+        else if (duration < 0)
+            shakeDuration = shakeDuration_default;
         else
         {
-            shakeDuration = shakeDuration_default;
+            shakeDuration = 0;
+            shake = false;
         }
     }
 }

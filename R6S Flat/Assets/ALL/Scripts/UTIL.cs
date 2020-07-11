@@ -53,4 +53,18 @@ public class UTIL : MonoBehaviour
 
         return n;
     }
+
+    public static float Qsqrt(float num, float step)
+    {
+        float n = 0;
+        if(num * num > 0)
+        {
+            while (n*n < num*num)
+            {
+                n += step;
+            }
+            return n;
+        }
+        return 0;
+    }
 }

@@ -57,7 +57,6 @@ public class Gun : MonoBehaviour
 
         if (reloading)
         {
-            //Debug.Log("Reloading");
             STATS.reloadSpeed_timer -= Time.deltaTime;
             if (STATS.reloadSpeed_timer <= 0)
             {
@@ -128,8 +127,6 @@ public class Gun : MonoBehaviour
 
     void ShakeCamera(bool shake)
     {
-        Debug.Log(1);
-
         if (shake)
         {
             UTIL.GetPlayer().GetComponent<CameraShake>().Shake(true);
